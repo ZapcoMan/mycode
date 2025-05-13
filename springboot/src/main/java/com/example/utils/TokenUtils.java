@@ -5,8 +5,8 @@ import cn.hutool.core.util.StrUtil;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.entity.Account;
-import com.example.service.AdminService;
-import com.example.service.UserService;
+import com.example.service.Impl.AdminServiceImpl;
+import com.example.service.Impl.UserServiceImpl;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
@@ -20,20 +20,20 @@ import java.util.Date;
 public class TokenUtils {
 
     @Resource
-    AdminService adminService;
+    AdminServiceImpl adminServiceImpl;
     @Resource
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
 
-    static AdminService staticAdminService;;
-    static UserService staticUserService;
+    static AdminServiceImpl staticAdminServiceImpl;;
+    static UserServiceImpl staticUserServiceImpl;
 
 
     // springboot工程启动后会加载这段代码
     @PostConstruct
     public void init() {
-        staticAdminService = adminService;
-        staticUserService = userService;
+        staticAdminServiceImpl = adminServiceImpl;
+        staticUserServiceImpl = userServiceImpl;
     }
 
 
@@ -62,9 +62,9 @@ public class TokenUtils {
         String role = split[1];
         // 根据token解析出来的userId去对应的表查询用户信息
         if ("ADMIN".equals(role)) {
-            return staticAdminService.selectById(userId);
+            return staticAdminServiceImpl.selectById(userId);
         } else if ("USER".equals(role)) {
-            return staticUserService.selectById(userId);
+            return staticUserServiceImpl.selectById(userId);
         }
         return null;
     }

@@ -60,11 +60,11 @@ const register = () => {
   formRef.value.validate((valid) => {
     if (valid) {
       request.post('/register', data.form).then(res => {
-        if (res.code === '200') {
+        if (res.code === 20000) {
           ElMessage.success('注册成功')
           router.push('/login')
         } else {
-          ElMessage.error(res.msg)
+          ElMessage.error(res.message)
         }
       })
     }

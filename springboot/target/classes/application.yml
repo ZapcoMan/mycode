@@ -1,5 +1,5 @@
 server:
-  port: 9999
+  port: 9991
 
 # 数据库配置
 spring:

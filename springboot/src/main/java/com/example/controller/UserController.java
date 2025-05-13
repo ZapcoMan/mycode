@@ -1,9 +1,8 @@
 package com.example.controller;
 
-import com.example.common.Result;
+import com.example.common.R;
 import com.example.entity.User;
-import com.example.service.UserService;
-import com.github.pagehelper.PageInfo;
+import com.example.service.Impl.UserServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,7 +19,7 @@ public class UserController {
      * 注入用户服务层接口，用于执行用户相关的业务逻辑
      */
     @Resource
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
     /**
      * 添加新用户
@@ -29,9 +28,9 @@ public class UserController {
      * @return 返回添加操作的结果
      */
     @PostMapping("/add")
-    public Result add(@RequestBody User user) {
-        userService.add(user);
-        return Result.success();
+    public R add(@RequestBody User user) {
+        userServiceImpl.add(user);
+        return R.ok();
     }
 
     /**
@@ -41,9 +40,9 @@ public class UserController {
      * @return 返回更新操作的结果
      */
     @PutMapping("/update")
-    public Result update(@RequestBody User user) {
-        userService.update(user);
-        return Result.success();
+    public R update(@RequestBody User user) {
+        userServiceImpl.update(user);
+        return  R.ok();
     }
 
     /**
@@ -53,9 +52,9 @@ public class UserController {
      * @return 返回删除操作的结果
      */
     @DeleteMapping("/delete/{id}")
-    public Result delete(@PathVariable Integer id) {
-        userService.deleteById(id);
-        return Result.success();
+    public R delete(@PathVariable Integer id) {
+        userServiceImpl.deleteById(id);
+        return  R.ok();
     }
 
     /**
@@ -65,9 +64,9 @@ public class UserController {
      * @return 返回批量删除操作的结果
      */
     @DeleteMapping("/deleteBatch")
-    public Result deleteBatch(@RequestBody List<User> list) {
-        userService.deleteBatch(list);
-        return Result.success();
+    public R deleteBatch(@RequestBody List<User> list) {
+        userServiceImpl.deleteBatch(list);
+        return  R.ok();
     }
 
     /**
@@ -76,9 +75,9 @@ public class UserController {
      * @return 返回所有用户信息列表
      */
     @GetMapping("/selectAll")
-    public Result selectAll() {
-        List<User> userList = userService.selectAll();
-        return Result.success(userList);
+    public R selectAll() {
+        List<User> userList = userServiceImpl.selectAll();
+        return  R.ok();
     }
 
     /**
@@ -90,11 +89,10 @@ public class UserController {
      * @return 返回分页查询结果，包含用户信息
      */
     @GetMapping("/selectPage")
-    public Result selectPage(@RequestParam(defaultValue = "1") Integer pageNum,
+    public R selectPage(@RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize,
                              User user) {
-        PageInfo<User> pageInfo = userService.selectPage(pageNum, pageSize, user);
-        return Result.success(pageInfo);  // 返回的是分页的对象
+        return  R.ok().data("pageInfo", userServiceImpl.selectPage(pageNum, pageSize, user));  // 返回的是分页的对象
     }
 
 }

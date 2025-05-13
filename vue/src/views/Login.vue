@@ -51,13 +51,14 @@ const login = () => {
   formRef.value.validate((valid) => {
     if (valid) {
       request.post('/login', data.form).then(res => {
-        if (res.code === '200') {
+          // console.log(res.dbAccount)
+        if (res.code === 20000) {
           // 存储用户信息
           localStorage.setItem("code_user", JSON.stringify(res.data || {}))
           ElMessage.success('登录成功')
           router.push('/')
         } else {
-          ElMessage.error(res.msg)
+          ElMessage.error(res.message)
         }
       })
     }

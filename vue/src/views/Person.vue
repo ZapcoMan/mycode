@@ -13,7 +13,7 @@
       </el-form-item>
       <el-form-item prop="avatar" label="头像">
                 <el-upload
-                    action="http://localhost:9999/files/upload"
+                    action="http://localhost:9991/files/upload"
                     :headers="{ token: data.user.token }"
                     :on-success="handleFileSuccess"
                     list-type="picture">
@@ -54,7 +54,7 @@ const update = () => {
   }
 
   request.put(url, data.user).then(res => {
-    if (res.code === '200') {
+    if (res.code === 20000) {
       ElMessage.success('更新成功')
       localStorage.setItem("code_user", JSON.stringify(data.user))
       emit('updateUser')
@@ -67,7 +67,7 @@ const upload = (params) => {
   formData.append('file', params.file);
 
   request.post('/files/upload', formData).then(res => {
-    if (res.code === '200') {
+    if (res.code === 20000) {
       ElMessage.success('上传成功');
       params.onSuccess(res); // 手动触发 success 回调
     } else {

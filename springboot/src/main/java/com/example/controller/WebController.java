@@ -1,11 +1,11 @@
 package com.example.controller;
 
-import com.example.common.Result;
+import com.example.common.R;
 import com.example.entity.Account;
 import com.example.entity.User;
 import com.example.exception.CustomerException;
-import com.example.service.AdminService;
-import com.example.service.UserService;
+import com.example.service.Impl.AdminServiceImpl;
+import com.example.service.Impl.UserServiceImpl;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,47 +16,47 @@ import org.springframework.web.bind.annotation.RestController;
 public class WebController {
 
     @Resource
-    AdminService adminService;
+    AdminServiceImpl adminServiceImpl;
     @Resource
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
 
     //  表示这是一个 get请求的接口
     @GetMapping("/hello") // 接口的路径，全局唯一的
-    public Result hello() {
-        return Result.success("hello");  // 接口的返回值
+    public R hello() {
+        return R.ok().message("hello");  // 接口的返回值
     }
 
     @PostMapping("/login")
-    public Result login(@RequestBody Account account) {
+    public R login(@RequestBody Account account) {
         Account dbAccount = null;
         if ("ADMIN".equals(account.getRole())) {
-            dbAccount = adminService.login(account);
+            dbAccount = adminServiceImpl.login(account);
         }else if ("USER".equals(account.getRole())) {
-            dbAccount = userService.login(account);
+            dbAccount = userServiceImpl.login(account);
         }else {
             throw new CustomerException("非法请求");
         }
-        return Result.success(dbAccount);
+        return R.success(dbAccount);
     }
 
     @PostMapping("/register")
-    public Result register(@RequestBody User user) {
-        userService.register(user);
-        return Result.success();
+    public R register(@RequestBody User user) {
+        userServiceImpl.register(user);
+        return R.ok();
     }
 
     @PostMapping("/updatePassword")
-    public Result UpdatePassword(@RequestBody Account account) {
+    public R UpdatePassword(@RequestBody Account account) {
         if("ADMIN".equals(account.getRole())){
-            adminService.updatePassword(account);
+            adminServiceImpl.updatePassword(account);
         }
         if("USER".equals(account.getRole())){
-            userService.updatePassword(account);
+            userServiceImpl.updatePassword(account);
         }
 
 
-        return Result.success();
+        return R.ok();
     }
 
 }

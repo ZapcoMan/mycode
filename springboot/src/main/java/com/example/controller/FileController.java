@@ -3,7 +3,7 @@ package com.example.controller;
 import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.lang.Dict;
-import com.example.common.Result;
+import com.example.common.R;
 import com.example.exception.CustomerException;
 import jakarta.servlet.ServletOutputStream;
 import jakarta.servlet.http.HttpServletResponse;
@@ -24,7 +24,7 @@ public class FileController {
      * 文件上传
      */
     @PostMapping("/upload")
-    public Result upload(@RequestParam("file") MultipartFile file) throws Exception {
+    public R upload(@RequestParam("file") MultipartFile file) throws Exception {
         // 找到文件的位置
         String filePath = System.getProperty("user.dir") + "/files/";
         if (!FileUtil.isDirectory(filePath)) {
@@ -35,7 +35,7 @@ public class FileController {
         // 写入文件
         FileUtil.writeBytes(bytes, filePath + fileName);
         String url = "http://localhost:9999/files/download/" + fileName;
-        return Result.success(url);
+        return R.success(url);
     }
 
     /**
@@ -64,7 +64,7 @@ public class FileController {
      * wang-editor编辑器文件上传接口
      */
     @PostMapping("/wang/upload")
-    public Map<String, Object> wangEditorUpload(MultipartFile file) {
+    public R wangEditorUpload(MultipartFile file) {
         String flag = System.currentTimeMillis() + "";
         String fileName = file.getOriginalFilename();
         try {
@@ -81,7 +81,7 @@ public class FileController {
         // wangEditor上传图片成功后， 需要返回的参数
         resMap.put("errno", 0);
         resMap.put("data", CollUtil.newArrayList(Dict.create().set("url", http + flag + "-" + fileName)));
-        return resMap;
+        return R.success(resMap);
     }
 
 }

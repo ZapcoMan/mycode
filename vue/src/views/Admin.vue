@@ -118,11 +118,11 @@ const load = () => {
       name: data.name
     }
   }).then(res => {
-    if (res.code === '200') {
+    if (res.code === 20000) {
       data.tableData = res.data.list
       data.total = res.data.total
     } else {
-      ElMessage.error(res.msg)
+      ElMessage.error(res.message)
     }
   })
 }
@@ -143,12 +143,12 @@ const add = () => {
   formRef.value.validate((valid) => {
     if (valid) {   // 验证通过的情况下
       request.post('/admin/add', data.form).then(res => {
-        if (res.code === '200') {
+        if (res.code === 20000) {
           data.formVisible = false
           ElMessage.success('新增成功')
           load()
         } else {
-          ElMessage.error(res.msg)
+          ElMessage.error(res.message)
         }
       })
     }
@@ -165,12 +165,12 @@ const update = () => {
   formRef.value.validate((valid) => {
     if (valid) {   // 验证通过的情况下
       request.put('/admin/update', data.form).then(res => {
-        if (res.code === '200') {
+        if (res.code === 20000) {
           data.formVisible = false
           ElMessage.success('修改成功')
           load()
         } else {
-          ElMessage.error(res.msg)
+          ElMessage.error(res.message)
         }
       })
     }
@@ -184,11 +184,11 @@ const save = () => {
 const del = (id) => {
   ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' }).then(res => {
     request.delete('/admin/delete/' + id).then(res => {
-      if (res.code === '200') {
+      if (res.code === 20000) {
         ElMessage.success('删除成功')
         load()
       } else {
-        ElMessage.error(res.msg)
+        ElMessage.error(res.message)
       }
     })
   }).catch(err => {})
@@ -205,11 +205,11 @@ const deleteBatch = () => {
   }
   ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' }).then(res => {
     request.delete('/admin/deleteBatch', { data: data.rows }).then(res => {
-      if (res.code === '200') {
+      if (res.code === 20000) {
         ElMessage.success('批量删除成功')
         load()
       } else {
-        ElMessage.error(res.msg)
+        ElMessage.error(res.message)
       }
     })
   }).catch(err => {})

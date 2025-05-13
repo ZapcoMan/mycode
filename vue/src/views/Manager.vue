@@ -7,7 +7,7 @@
         <span style="font-size: 20px; font-weight: bold; color: #f1f1f1; margin-left: 5px">毕业设计</span>
       </div>
       <div style="flex: 1; display: flex; align-items: center; padding-left: 20px; border-bottom: 1px solid #ddd">
-        师生互动子系统
+          <p style="font-size: larger"> 脚手架 </p>
       </div>
       <div style="width: fit-content; padding-right: 20px; display: flex; align-items: center; border-bottom: 1px solid #ddd">
         <el-dropdown>

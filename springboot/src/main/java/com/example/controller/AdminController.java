@@ -1,9 +1,8 @@
 package com.example.controller;
 
-import com.example.common.Result;
+import com.example.common.R;
 import com.example.entity.Admin;
-import com.example.service.AdminService;
-import com.github.pagehelper.PageInfo;
+import com.example.service.Impl.AdminServiceImpl;
 import io.swagger.annotations.ApiOperation;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +20,7 @@ public class AdminController {
      * 注入Admin服务类，用于处理管理员相关的业务逻辑
      */
     @Resource
-    AdminService adminService;
+    AdminServiceImpl adminServiceImpl;
 
     /**
      * 添加管理员
@@ -30,9 +29,9 @@ public class AdminController {
      */
     @ApiOperation("添加管理员")
     @PostMapping("/add")
-    public Result add(@RequestBody Admin admin) {  // @RequestBody 接收前端传来的 json参数
-        adminService.add(admin);
-        return Result.success();
+    public R add(@RequestBody Admin admin) {
+        adminServiceImpl.add(admin);
+        return R.ok();
     }
 
     /**
@@ -42,9 +41,9 @@ public class AdminController {
      */
     @ApiOperation("更新管理员信息")
     @PutMapping("/update")
-    public Result update(@RequestBody Admin admin) {  // @RequestBody 接收前端传来的 json参数
-        adminService.update(admin);
-        return Result.success();
+    public R update(@RequestBody Admin admin) {
+        adminServiceImpl.update(admin);
+        return R.ok();
     }
 
     /**
@@ -54,9 +53,9 @@ public class AdminController {
      */
     @ApiOperation("根据ID删除管理员")
     @DeleteMapping("/delete/{id}")
-    public Result delete(@PathVariable Integer id) {  // @PathVariable 接收前端传来的路径参数
-        adminService.deleteById(id);
-        return Result.success();
+    public R delete(@PathVariable Integer id) {
+        adminServiceImpl.deleteById(id);
+        return R.ok();
     }
 
     /**
@@ -66,9 +65,9 @@ public class AdminController {
      */
     @ApiOperation("批量删除管理员")
     @DeleteMapping("/deleteBatch")
-    public Result deleteBatch(@RequestBody List<Admin> list) {  //  @RequestBody 接收前端传来的 json数组
-        adminService.deleteBatch(list);
-        return Result.success();
+    public R deleteBatch(@RequestBody List<Admin> list) {
+        adminServiceImpl.deleteBatch(list);
+        return R.ok();
     }
 
     /**
@@ -76,10 +75,9 @@ public class AdminController {
      * @return 返回结果对象，包含所有管理员信息的列表
      */
     @ApiOperation("查询所有管理员")
-    @GetMapping("/selectAll")  //   完整的请求路径：http://ip:port/user/selectAll
-    public Result selectAll() {
-        List<Admin> adminList = adminService.selectAll();
-        return Result.success(adminList);
+    @GetMapping("/selectAll")
+    public R selectAll() {
+        return R.ok().data("adminList", adminServiceImpl.selectAll());
     }
 
     /**
@@ -91,11 +89,10 @@ public class AdminController {
      */
     @ApiOperation("分页查询管理员")
     @GetMapping("/selectPage")
-    public Result selectPage(@RequestParam(defaultValue = "1") Integer pageNum,
+    public R selectPage(@RequestParam(defaultValue = "1") Integer pageNum,
                              @RequestParam(defaultValue = "10") Integer pageSize,
                              Admin admin) {
-        PageInfo<Admin> pageInfo = adminService.selectPage(pageNum, pageSize, admin);
-        return Result.success(pageInfo);  // 返回的是分页的对象
+        return R.ok().data("pageInfo", adminServiceImpl.selectPage(pageNum, pageSize, admin));
     }
 
 }

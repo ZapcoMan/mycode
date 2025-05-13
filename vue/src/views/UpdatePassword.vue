@@ -45,14 +45,14 @@ const updatePassword = () => {
   formRef.value.validate(valid => {
     if (valid) {
       request.post('/updatePassword', data.user).then(res => {
-        if (res.code === '200') {
+        if (res.code === 20000) {
           ElMessage.success('修改成功')
           setInterval(() => {
             localStorage.removeItem('code_user')
             location.href = '/login'
           }, 500)
         } else {
-          ElMessage.error(res.msg)
+          ElMessage.error(res.message)
         }
       })
     }

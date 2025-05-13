@@ -6,8 +6,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.example.entity.Account;
 import com.example.exception.CustomerException;
-import com.example.service.AdminService;
-import com.example.service.UserService;
+import com.example.service.Impl.AdminServiceImpl;
+import com.example.service.Impl.UserServiceImpl;
 import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -18,9 +18,9 @@ import org.springframework.web.servlet.HandlerInterceptor;
 public class JWTInterceptor implements HandlerInterceptor {
 
     @Resource
-    AdminService adminService;
+    AdminServiceImpl adminServiceImpl;
     @Resource
-    UserService userService;
+    UserServiceImpl userServiceImpl;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
@@ -43,9 +43,9 @@ public class JWTInterceptor implements HandlerInterceptor {
             String role = split[1];
             // 根据token解析出来的userId去对应的表查询用户信息
             if ("ADMIN".equals(role)) {
-                account = adminService.selectById(userId);
+                account = adminServiceImpl.selectById(userId);
             } else if ("USER".equals(role)) {
-                account = userService.selectById(userId);
+                account = userServiceImpl.selectById(userId);
             }
 
         } catch (Exception e) {
