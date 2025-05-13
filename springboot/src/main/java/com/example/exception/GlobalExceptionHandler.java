@@ -24,7 +24,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(CustomerException.class)
     @ResponseBody // 将result对象转换成 json的格式
     public R customerError(CustomerException e) {
-        log.error("自定义错误", e);
+        log.error("出现了未知的错误", e);
         return R.error(Integer.valueOf(e.getCode()), e.getMsg());
     }
 

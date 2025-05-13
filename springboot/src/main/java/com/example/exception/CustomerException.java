@@ -1,9 +1,8 @@
 package com.example.exception;
 
+import com.example.common.ResultCodeEnum;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.Setter;
 
 /**
  * 自定义异常
@@ -21,10 +20,10 @@ public class CustomerException extends RuntimeException {
     }
 
     public CustomerException(String msg) {
-        this.code = "500";
+        this.code = String.valueOf(ResultCodeEnum.UNKNOWN_ERROR.getCode());
         this.msg = msg;
     }
 
-    public CustomerException() {}
+
 
 }
