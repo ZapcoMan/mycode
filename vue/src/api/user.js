@@ -25,3 +25,7 @@ export const deleteUser = (id) => {
 export const deleteUsers = (rows) => {
     return request.delete('/user/deleteBatch', { data: rows })
 }
+
+export const register = (data) =>{
+    return request.post('/register', data.form)
+}
