@@ -78,13 +78,19 @@
 </template>
 
 <script setup>
-import { reactive, ref } from "vue";
-import {Search} from "@element-plus/icons-vue";
-import request from "@/utils/request.js";
-import {ElMessage,ElMessageBox} from "element-plus";
+import { reactive, ref } from 'vue'
+import { Search } from '@element-plus/icons-vue'
+import { ElMessage, ElMessageBox } from 'element-plus'
+import {
+  fetchUsers,
+  addUser,
+  updateUser,
+  deleteUser,
+  deleteUsers
+} from '@/api/user'
 
 const data = reactive({
-  user: JSON.parse(localStorage.getItem('code_user') || "{}"),
+  user: JSON.parse(localStorage.getItem('code_user') || '{}'),
   username: null,
   name: null,
   pageNum: 1,
@@ -94,28 +100,21 @@ const data = reactive({
   formVisible: false,
   form: {},
   rules: {
-    username: [
-      { required: true, message: '请填写账号', trigger: 'blur' }
-    ],
-    role: [
-      { required: true, message: '请填写身份', trigger: 'blur' }
-    ],
-    name: [
-      { required: true, message: '请填写真实姓名', trigger: 'blur' }
-    ],
+    username: [{ required: true, message: '请填写账号', trigger: 'blur' }],
+    role: [{ required: true, message: '请填写身份', trigger: 'blur' }],
+    name: [{ required: true, message: '请填写真实姓名', trigger: 'blur' }]
   },
   rows: []
 })
 
 const formRef = ref()
+
 const load = () => {
-  request.get('/user/selectPage', {
-    params: {
-      pageNum: data.pageNum,
-      pageSize: data.pageSize,
-      username: data.username,
-      name: data.name
-    }
+  fetchUsers({
+    pageNum: data.pageNum,
+    pageSize: data.pageSize,
+    username: data.username,
+    name: data.name
   }).then(res => {
     if (res.code === 20000) {
       data.tableData = res.data.list
@@ -126,6 +125,7 @@ const load = () => {
   })
 }
 load()
+
 const reset = () => {
   data.username = null
   data.name = null
@@ -138,10 +138,9 @@ const handleAdd = () => {
 }
 
 const add = () => {
-  // formRef 是表单的引用
-  formRef.value.validate((valid) => {
-    if (valid) {   // 验证通过的情况下
-      request.post('/user/add', data.form).then(res => {
+  formRef.value.validate(valid => {
+    if (valid) {
+      addUser(data.form).then(res => {
         if (res.code === 20000) {
           data.formVisible = false
           ElMessage.success('新增成功')
@@ -154,16 +153,10 @@ const add = () => {
   })
 }
 
-const handleEdit = (row) => {
-  data.form = JSON.parse(JSON.stringify(row))  // 深度拷贝数据
-  data.formVisible = true
-}
-
 const update = () => {
-  // formRef 是表单的引用
-  formRef.value.validate((valid) => {
-    if (valid) {   // 验证通过的情况下
-      request.put('/user/update', data.form).then(res => {
+  formRef.value.validate(valid => {
+    if (valid) {
+      updateUser(data.form).then(res => {
         if (res.code === 20000) {
           data.formVisible = false
           ElMessage.success('修改成功')
@@ -180,20 +173,22 @@ const save = () => {
   data.form.id ? update() : add()
 }
 
-const del = (id) => {
-  ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' }).then(res => {
-    request.delete('/user/delete/' + id).then(res => {
-      if (res.code === 20000) {
-        ElMessage.success('删除成功')
-        load()
-      } else {
-        ElMessage.error(res.message)
-      }
-    })
-  }).catch(err => {})
+const del = id => {
+  ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' })
+      .then(() => {
+        deleteUser(id).then(res => {
+          if (res.code === 20000) {
+            ElMessage.success('删除成功')
+            load()
+          } else {
+            ElMessage.error(res.message)
+          }
+        })
+      })
+      .catch(() => {})
 }
 
-const handleSelectionChange = (rows) => {  // rows 就是实际选择的数组
+const handleSelectionChange = rows => {
   data.rows = rows
 }
 
@@ -202,20 +197,26 @@ const deleteBatch = () => {
     ElMessage.warning('请选择数据')
     return
   }
-  ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' }).then(res => {
-    request.delete('/user/deleteBatch', { data: data.rows }).then(res => {
-      if (res.code === 20000) {
-        ElMessage.success('批量删除成功')
-        load()
-      } else {
-        ElMessage.error(res.message)
-      }
-    })
-  }).catch(err => {})
+  ElMessageBox.confirm('删除后无法恢复，您确认删除吗？', '删除确认', { type: 'warning' })
+      .then(() => {
+        deleteUsers(data.rows).then(res => {
+          if (res.code === 20000) {
+            ElMessage.success('批量删除成功')
+            load()
+          } else {
+            ElMessage.error(res.message)
+          }
+        })
+      })
+      .catch(() => {})
 }
 
-const handleFileSuccess = (res) => {
+const handleEdit = row => {
+  data.form = JSON.parse(JSON.stringify(row))
+  data.formVisible = true
+}
+
+const handleFileSuccess = res => {
   data.form.avatar = res.data
 }
-
 </script>
