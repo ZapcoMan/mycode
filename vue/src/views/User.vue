@@ -117,8 +117,8 @@ const load = () => {
     name: data.name
   }).then(res => {
     if (res.code === 20000) {
-      data.tableData = res.data.list
-      data.total = res.data.total
+      data.tableData = res.dataMap.pageInfo.list
+      data.total = res.dataMap.total
     } else {
       ElMessage.error(res.message)
     }

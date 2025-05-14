@@ -60,7 +60,7 @@ const data = reactive({
 const register = () => {
   formRef.value.validate((valid) => {
     if (valid) {
-       register(data).then(res => {
+       request.post('/register',data).then(res => {
         if (res.code === 20000) {
           ElMessage.success('注册成功')
           router.push('/login')

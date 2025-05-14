@@ -1,5 +1,6 @@
 package com.example.common;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.util.HashMap;
@@ -9,6 +10,7 @@ import java.util.Map;
  * 封装返回结果的类，使用 Lombok 注解减少 boilerplate 代码
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL) // 只序列化非 null 的字段
 public class R {
     // 表示操作是否成功
     private Boolean success;
@@ -16,13 +18,15 @@ public class R {
     private Integer code;
     // 状态信息
     private String message;
-    // 存放数据的 Map
+
+    // 存放数据的 Object
     private Object data;
+
+    // 存放数据的 Map
     private Map<String, Object> dataMap = new HashMap<>();
 
     // 构造器私有，防止外部实例化
-    private R() {
-    }
+    private R() {}
 
     // 通用返回成功的方法
     public static R ok() {
@@ -49,12 +53,14 @@ public class R {
         r.setMessage(ResultCodeEnum.UNKNOWN_ERROR.getMessage());
         return r;
     }
+
     public static R error(Integer code, String msg) {
         R result = new R();
         result.setCode(code);
         result.setMessage(msg);
         return result;
     }
+
     public static R error(String msg) {
         R result = new R();
         result.setCode(ResultCodeEnum.UNKNOWN_ERROR.getCode());
@@ -77,12 +83,14 @@ public class R {
 
     // 自定义返回数据的方法，接受一个 Map 作为参数
     public R data(Map<String, Object> map) {
+        this.setData(null); // 清空 data
         this.setDataMap(map);
         return this;
     }
 
     // 通用设置data的方法，接受一个键值对作为参数
     public R data(String key, Object value) {
+        this.setData(null); // 清空 data
         this.dataMap.put(key, value);
         return this;
     }
@@ -105,4 +113,13 @@ public class R {
         return this;
     }
 
+    // 自定义序列化：只返回 data 或 dataMap，不同时返回
+//    public Map<String, Object> getJsonResponse() {
+//        if (this.data != null) {
+//            return Map.of("data", this.data);
+//        } else if (!this.dataMap.isEmpty()) {
+//            return Map.of("dataMap", this.dataMap);
+//        }
+//        return new HashMap<>();
+//    }
 }
